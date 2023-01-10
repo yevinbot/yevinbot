@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# NoneBot
+# YevinBot
 
 _✨ Python 异步机器人框架 ✨_
 
