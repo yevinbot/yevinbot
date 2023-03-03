@@ -47,12 +47,20 @@ def send_message(message, message_type, target_id):
 
 # 运行机器人
 def run_bot():
-    ws = websocket.create_connection(f"ws://{HOST}:{PORT}/ws/event/", header=[f"Authorization: Bearer {ACCESS_TOKEN}"])
-    event = {"action": "get_latest_events", "params": {"access_token": ACCESS_TOKEN}}
-    ws.send(json.dumps(event))
+    try:
+        ws = websocket.create_connection(f"ws://{HOST}:{PORT}/", header=[f"Authorization: Bearer {ACCESS_TOKEN}"])
+        event = {"action": "get_login_info", "params": {"access_token": ACCESS_TOKEN}}
+        ws.send(json.dumps(event))
+    except:
+        print("Error creating websocket connection")
+        exit()
     while True:
         # messages = receive_messages()
-        response = ws.recv()
+        try:
+            response = ws.recv()
+        except Exception:
+            print("Connection error")
+        messages = json.loads(response)
         print(response)
         
         continue
