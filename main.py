@@ -1,10 +1,11 @@
+import traceback
 import websocket
 import json
 
 # 机器人配置信息
 HOST = '127.0.0.1'  # go-cqhttp 服务器地址
 PORT = 6700  # go-cqhttp 服务器端口
-ACCESS_TOKEN = "Bearer " + '114514'  # 访问令牌
+ACCESS_TOKEN = '114514'  # 访问令牌
 
 # 构造 API 请求数据
 def build_api_data(action, params):
@@ -26,7 +27,7 @@ def send_api_request(action, params):
 
 # 接收消息
 def receive_messages():
-    ws = websocket.create_connection(f"ws://{HOST}:{PORT}/ws/event/")
+    ws = websocket.create_connection(f"ws://{HOST}:{PORT}/ws/event/", header=[f"Authorization: Bearer {ACCESS_TOKEN}"])
     event = {"action": "get_latest_events", "params": {"access_token": ACCESS_TOKEN}}
     ws.send(json.dumps(event))
     response = ws.recv()
@@ -46,8 +47,15 @@ def send_message(message, message_type, target_id):
 
 # 运行机器人
 def run_bot():
+    ws = websocket.create_connection(f"ws://{HOST}:{PORT}/ws/event/", header=[f"Authorization: Bearer {ACCESS_TOKEN}"])
+    event = {"action": "get_latest_events", "params": {"access_token": ACCESS_TOKEN}}
+    ws.send(json.dumps(event))
     while True:
-        messages = receive_messages()
+        # messages = receive_messages()
+        response = ws.recv()
+        print(response)
+        
+        continue
         for message in messages:
             message_type = message['message_type']
             if message_type == 'private':
