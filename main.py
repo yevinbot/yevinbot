@@ -26,7 +26,6 @@ def send_api_request(action, params):
 # 接收消息
 def receive_messages():
     global ws
-    ws = websocket.create_connection(f"ws://{HOST}:{PORT}/", header=[f"Authorization: Bearer {ACCESS_TOKEN}"])
     event = {"action": "get_login_info", "params": {"access_token": ACCESS_TOKEN}}
     ws.send(json.dumps(event))
 
