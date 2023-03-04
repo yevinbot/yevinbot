@@ -38,9 +38,9 @@ def send_message(message, message_type, target_id):
     if(message_type == 'group'):
         params['group_id'] = target_id
         send_api_request('send_group_msg', params)
-    elif(message_type == 'pravite'):
+    elif(message_type == 'private'):
         params['user_id'] = target_id
-        send_api_request('send_pravite_msg', params)
+        send_api_request('send_private_msg', params)
 
 # 运行机器人
 def run_bot():
