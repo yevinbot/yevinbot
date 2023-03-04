@@ -1,6 +1,7 @@
 import time
 import websocket
 import json
+from chat_thesaurus import *
 
 # 机器人配置信息
 HOST = '127.0.0.1'  # go-cqhttp 服务器地址
@@ -69,14 +70,16 @@ def run_bot():
             user_id = messages['user_id']
             message_text = messages['message']
             # TODO: 根据收到的消息内容进行相应处理
-            send_message(f'reply to user {user_id}: {message_text}', 'private', user_id)
+            text = chat_thesaurus(message_text)
+            send_message(text, 'private', user_id)
         elif message_type == 'group':
             # 处理群聊消息
             group_id = messages['group_id']
             user_id = messages['user_id']
             message_text = messages['message']
             # TODO: 根据收到的消息内容进行相应处理
-            send_message(f'reply to group {group_id}, user {user_id}: {message_text}', 'group', group_id)
+            text = chat_thesaurus(message_text)
+            send_message(text, 'group', group_id)
 
 if __name__ == '__main__':
     # 尝试建立websocket连接
