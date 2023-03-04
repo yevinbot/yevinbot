@@ -1,12 +1,17 @@
+import os
+import yaml
 import time
 import websocket
 import json
 from chat_thesaurus import *
 
 # 机器人配置信息
-HOST = '127.0.0.1'  # go-cqhttp 服务器地址
-PORT = 6700  # go-cqhttp 服务器端口
-ACCESS_TOKEN = '114514'  # 访问令牌
+if os.path.exists('config.yml'):
+    with open('config.yml', 'r', encoding='utf-8') as f:
+        config = yaml.load(f.read(), Loader=yaml.FullLoader)
+else:
+    with open('config_example.yml', 'r', encoding='utf-8') as f:
+        config = yaml.load(f.read(), Loader=yaml.FullLoader)
 
 # 构造 API 请求数据
 def build_api_data(action, params):
@@ -28,13 +33,13 @@ def send_api_request(action, params):
 # 接收消息
 def receive_messages():
     global ws
-    event = {"action": "get_login_info", "params": {"access_token": ACCESS_TOKEN}}
+    event = {"action": "get_login_info", "params": {"access_token": config['access_token']}}
     ws.send(json.dumps(event))
 
 # 发送消息
 def send_message(message, message_type, target_id):
     params = {
-        'access_token': ACCESS_TOKEN,
+        'access_token': config['access_token'],
         'message': message
     }
     if(message_type == 'group'):
@@ -84,7 +89,7 @@ def run_bot():
 if __name__ == '__main__':
     # 尝试建立websocket连接
     try:
-        ws = websocket.create_connection(f"ws://{HOST}:{PORT}/", header=[f"Authorization: Bearer {ACCESS_TOKEN}"])
+        ws = websocket.create_connection(f"ws://{config['host']}:{config['port']}/", header=[f"Authorization: Bearer {config['access_token']}"])
     except:
         print("Error creating websocket connection")
         exit()

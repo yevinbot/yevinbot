@@ -1,0 +1,9 @@
+# 使用正向websocket
+# go-cqhttp 服务器地址
+host: 'localhost'
+# go-cqhttp 服务器端口
+port: '8080'
+# 访问令牌
+access_token: ''
+# 调试模式
+debug: false
