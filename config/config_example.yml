@@ -7,3 +7,11 @@ port: '8080'
 access_token: ''
 # 调试模式
 debug: false
+
+# mysql数据库配置
+mysql:
+  host: 'localhost'
+  port: '3306'
+  user: ''
+  password: ''
+  database: ''
