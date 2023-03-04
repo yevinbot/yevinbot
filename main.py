@@ -3,7 +3,9 @@ import yaml
 import time
 import websocket
 import json
+
 from chat_thesaurus import *
+from mysql import Database
 
 # 机器人配置信息
 if os.path.exists('config/config.yml'):
@@ -38,15 +40,14 @@ def receive_messages():
 # 发送消息
 def send_message(message, message_type, target_id):
     params = {
-        'access_token': config['access_token'],
-        'message': message
+        'message': message,
+        'auto_escape': False
     }
     if(message_type == 'group'):
         params['group_id'] = target_id
-        send_api_request('send_group_msg', params)
     elif(message_type == 'private'):
         params['user_id'] = target_id
-        send_api_request('send_private_msg', params)
+    send_api_request('send_msg', params)
 
 # 运行机器人
 def run_bot():
@@ -66,7 +67,10 @@ def run_bot():
                 
         if messages['post_type'] != "message":
             continue
-        print(messages)
+        if config['debug']:            
+            print(messages)
+            # 日志写入数据库
+            Database(config).chat_logs(messages)
         
         # 查找词库获取回答
         text = chat_thesaurus(messages)
