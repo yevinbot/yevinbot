@@ -6,19 +6,18 @@ import json
 from chat_thesaurus import *
 
 # 机器人配置信息
-if os.path.exists('config.yml'):
-    with open('config.yml', 'r', encoding='utf-8') as f:
+if os.path.exists('config/config.yml'):
+    with open('config/config.yml', 'r', encoding='utf-8') as f:
         config = yaml.load(f.read(), Loader=yaml.FullLoader)
 else:
-    with open('config_example.yml', 'r', encoding='utf-8') as f:
+    with open('config/config_example.yml', 'r', encoding='utf-8') as f:
         config = yaml.load(f.read(), Loader=yaml.FullLoader)
 
 # 构造 API 请求数据
 def build_api_data(action, params):
     data = {
         'action': action,
-        'params': params,
-        'echo': 'hello world'
+        'params': params
     }
     return json.dumps(data)
 
