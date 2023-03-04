@@ -63,27 +63,24 @@ def run_bot():
         messages = json.loads(response)
         messages.setdefault('post_type', None)
         messages.setdefault('message_type', None)
-        print(messages)
                 
         if messages['post_type'] != "message":
             continue
+        print(messages)
         
-        message_type = messages['message_type']
-        if message_type == 'private':
+        # 查找词库获取回答
+        text = chat_thesaurus(messages)
+        if text == None:
+            continue
+        
+        if messages['message_type'] == 'private':
             # 处理私聊消息
-            user_id = messages['user_id']
-            message_text = messages['message']
             # TODO: 根据收到的消息内容进行相应处理
-            text = chat_thesaurus(message_text)
-            send_message(text, 'private', user_id)
-        elif message_type == 'group':
+            send_message(text, 'private', messages['user_id'])
+        elif messages['message_type'] == 'group':
             # 处理群聊消息
-            group_id = messages['group_id']
-            user_id = messages['user_id']
-            message_text = messages['message']
             # TODO: 根据收到的消息内容进行相应处理
-            text = chat_thesaurus(message_text)
-            send_message(text, 'group', group_id)
+            send_message(text, 'group', messages['group_id'])
 
 if __name__ == '__main__':
     # 尝试建立websocket连接
