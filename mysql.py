@@ -3,19 +3,9 @@ import json
 import traceback
 import pymysql
 
-import os
-import yaml
-
-# 机器人配置信息
-if os.path.exists('config/config.yml'):
-    with open('config/config.yml', 'r', encoding='utf-8') as f:
-        config = yaml.load(f.read(), Loader=yaml.FullLoader)
-else:
-    with open('config/config_example.yml', 'r', encoding='utf-8') as f:
-        config = yaml.load(f.read(), Loader=yaml.FullLoader)
-
 class Database():
     def __init__(self, config):
+        self.config = config
         # 打开数据库连接
         try:
             self.db = pymysql.connect(host=config['mysql']['host'], user=config['mysql']['user'], 
@@ -33,7 +23,7 @@ class Database():
             
             # 使用 execute()  方法执行 SQL 查询
             date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            cursor.execute(f"INSERT INTO `{config['mysql']['database']}`.`logs` (`id`, `json`, `time`) VALUES (null, '{messages}', '{date}')")
+            cursor.execute(f"INSERT INTO `{self.config['mysql']['database']}`.`logs` (`id`, `json`, `time`) VALUES (null, '{messages}', '{date}')")
             
             # 使用 fetchone() 方法获取单条数据.
             data = cursor.fetchall()
