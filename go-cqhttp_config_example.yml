@@ -1,0 +1,14 @@
+# 连接服务列表
+servers:
+  # 添加方式，同一连接方式可添加多个，具体配置说明请查看文档
+  #- http: # http 通信
+  #- ws:   # 正向 Websocket
+  #- ws-reverse: # 反向 Websocket
+  #- pprof: #性能分析服务器
+
+  # 正向WS设置
+  - ws:
+      # 正向WS服务器监听地址
+      address: 0.0.0.0:8080
+      middlewares:
+        <<: *default # 引用默认中间件

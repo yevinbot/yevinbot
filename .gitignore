@@ -1,7 +1,7 @@
 # 配置文件
 config.yml
 # 缓存文件
-__pycache__
+__pycache__/*
 *.pyc
 # 日志文件
 *.log
