@@ -1,3 +1,4 @@
+import time
 import websocket
 import json
 
@@ -51,7 +52,9 @@ def run_bot():
             # 接收返回的消息
             response = ws.recv()
         except Exception:
-            print("Connection error")
+            print("[", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), "] Connection is lost")
+            time.sleep(60)
+            continue
         messages = json.loads(response)
         messages.setdefault('post_type', None)
         messages.setdefault('message_type', None)
