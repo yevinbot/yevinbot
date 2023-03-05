@@ -3,7 +3,7 @@ import yaml
 import time
 import websocket
 import json
-
+# 导入自己写的模块
 from chat_thesaurus import *
 from mysql import Database
 
