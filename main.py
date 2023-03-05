@@ -24,16 +24,14 @@ def build_api_data(action, params):
     return json.dumps(data)
 
 # 发送 API 请求
-def send_api_request(action, params):
-    global ws
+def send_api_request(ws, action, params):
     data = build_api_data(action, params)
     ws.send(data)
     response = ws.recv()
     return json.loads(response)
 
 # 接收消息
-def receive_messages():
-    global ws
+def receive_messages(ws):
     event = {"action": "get_login_info", "params": {"access_token": config['access_token']}}
     ws.send(json.dumps(event))
 
@@ -47,12 +45,11 @@ def send_message(message, message_type, target_id):
         params['group_id'] = target_id
     elif(message_type == 'private'):
         params['user_id'] = target_id
-    send_api_request('send_msg', params)
+    send_api_request(ws, 'send_msg', params)
 
 # 运行机器人
-def run_bot():
-    global ws
-    receive_messages()
+def run_bot(ws):
+    receive_messages(ws)
     while True:
         try:
             # 接收返回的消息
@@ -93,4 +90,4 @@ if __name__ == '__main__':
     except:
         print("Error creating websocket connection")
         exit()
-    run_bot()
+    run_bot(ws)
