@@ -36,10 +36,10 @@ def receive_messages(ws):
     ws.send(json.dumps(event))
 
 # 发送消息
-def send_message(message, message_type, target_id):
+def send_message(message, message_type, target_id, auto_escape = False):
     params = {
         'message': message,
-        'auto_escape': False
+        'auto_escape': auto_escape
     }
     if(message_type == 'group'):
         params['group_id'] = target_id
