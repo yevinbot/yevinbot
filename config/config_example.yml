@@ -7,6 +7,12 @@ port: '8080'
 access_token: ''
 # 调试模式
 debug: false
+# 写日志
+write_log: true
+
+# 管理员列表
+admin:
+  - 1000
 
 # mysql数据库配置
 mysql:

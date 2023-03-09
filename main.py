@@ -62,16 +62,20 @@ def run_bot(ws):
         messages = json.loads(response)
         messages.setdefault('post_type', None)
         messages.setdefault('message_type', None)
+        messages.setdefault('group_id', '0')
                 
         if messages['post_type'] != "message":
             continue
+        
         if config['debug']:            
             print(messages)
+        
+        if config['write_log']:
             # 日志写入数据库
             Database(config).chat_logs(messages)
         
         # 查找词库获取回答
-        text = chat_thesaurus(messages)
+        text = chat_thesaurus(messages, config)
         if text == None:
             continue
         
