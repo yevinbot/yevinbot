@@ -1,4 +1,5 @@
 import os
+import traceback
 import yaml
 import time
 import websocket
@@ -89,5 +90,6 @@ if __name__ == '__main__':
         ws = websocket.create_connection(f"ws://{config['host']}:{config['port']}/", header=[f"Authorization: Bearer {config['access_token']}"])
     except:
         print("Error creating websocket connection")
+        traceback.print_exc()
         exit()
     run_bot(ws)
