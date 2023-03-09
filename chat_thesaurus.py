@@ -1,3 +1,4 @@
+import math
 import re
 import requests
 
@@ -6,6 +7,8 @@ def chat_thesaurus(messages):
     message = messages['message']
     # 按空格分隔参数
     arg = re.split('\s', message)
+    # 捕获一个命令后的所有内容
+    arg_all = re.match(arg[0]+' (.*)', message).group(1)
     # 计算参数数量
     arg_len = len(arg)
     
@@ -39,6 +42,12 @@ def chat_thesaurus(messages):
         text = "这是一个网址"
     elif re.match('\d{1,3}', message):
         text = "选项"
+    elif arg[0] == '/calc':
+        # 计算器
+        try:
+            text = eval(arg_all, {"__builtins__":None},{"math": math})
+        except Exception:
+            text = "计算错误，表达式不合法"
     else:
         text = None
     return text
