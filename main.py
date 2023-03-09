@@ -59,10 +59,12 @@ def run_bot(ws):
             print("[", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), "] Connection is lost")
             time.sleep(60)
             continue
+        # 定义可能不存在的键，防止报错
         messages = json.loads(response)
         messages.setdefault('post_type', None)
         messages.setdefault('message_type', None)
         messages.setdefault('group_id', '0')
+        messages.setdefault('user_id', '0')
                 
         if messages['post_type'] != "message":
             continue

@@ -1,10 +1,12 @@
 import math
 import re
+import traceback
 import requests
 from mysql import Database
 
-def is_admin(config, target_id):
-    if target_id in config['admin']:
+# 判断QQ号是否在管理员列表里
+def f_is_admin(target_id, config):
+    if f"{target_id}" in config['admin']:
         return True
     else:
         return False
@@ -22,26 +24,32 @@ def chat_thesaurus(messages, config):
             arg_all = re.match(arg[0]+' (.*)', message).group(1)
         except Exception:
             pass
+    is_admin = f_is_admin(messages['user_id'], config)
     try:
         # 查询开关
         bot_switch = Database(config).bot_switch(messages['group_id'])
-        bot_switch = [0][1]
+        if bot_switch == None:
+            bot_switch = '0'
+        else:
+            bot_switch = bot_switch[0][1]
     except Exception:
         bot_switch = '0'
+        traceback.print_exc()
         pass
     if bot_switch == '0':
-        if arg[0] == '/on':
+        if arg[0] == '/on' and is_admin:
             Database(config).bot_switch(messages['group_id'], 1)
             text = "Bot started successfully"
         else:
             text = None
         return text
     elif bot_switch == '1':
-        if arg[0] == '/on':
+        if arg[0] == '/on' and is_admin:
             text = "Bot is running"
-        if arg[0] == '/off':
+        elif arg[0] == '/off' and is_admin:
+            Database(config).bot_switch(messages['group_id'], 0)
             text = "Bot is off"
-        if arg[0] == '/help':
+        elif arg[0] == '/help':
             text = "这是一个帮助列表<Response [200]>"
         elif arg[0] == '/loli':
             text = "[CQ:image,file={$api_json['imgurl']}]"
@@ -67,8 +75,8 @@ def chat_thesaurus(messages, config):
                     }
                 response = requests.post(url = "https://api.xiwangly.top/math.php", data = data, headers = header).text
                 text = f"{response}"
-        elif re.match('http(s)\:\/\/', message):
-            text = "这是一个网址"
+        elif re.match('_http(s)\:\/\/', message):
+            text = "这是一个???"
         elif re.match('\d{1,3}', message):
             text = "选项"
         elif arg[0] == '/calc':
