@@ -14,7 +14,7 @@ class Database():
             print("Could not connect to MySQL")
         self.db.begin()
     
-    def chat_logs(self, messages = None):    
+    def chat_logs(self, messages = None):
         try:
             # 使用 cursor() 方法创建一个游标对象 cursor
             cursor = self.db.cursor()
