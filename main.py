@@ -1,36 +1,39 @@
-import socket
+"""
+go-cqhttp平台api适配器
+writen by 萌新源 at 2023/3/11
+"""
+
+import websocket
 import json
-import go
-from read import Read
 
-ListenSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-ListenSocket.bind(('127.0.0.1', 5701))
-ListenSocket.listen(100)
-read_i = Read()
-read_i.s_key()
 
-HttpResponseHeader = '''HTTP/1.1 200 OK
-Content-Type: text/html\r\n\r\n
-'''
+class Bot:
+    """管理api接口"""
 
-def request_to_json(msg):
-    for i in range(len(msg)):
-        if msg[i]=="{" and msg[-1]=="\n":
-            return json.loads(msg[i:])
-    return None
+    def __init__(self, ws):
+        """初始化
+        参数说明：
+            - ws :传入已链接的ws对象
+        """
+        self.ws = ws
+        self.data = {
+            "action": "",
+            "params": {}
+        }
 
-#需要循环执行，返回值为json格式
-def rev_msg():# json or None
-    Client, Address = ListenSocket.accept()
-    Request = Client.recv(1024).decode(encoding='utf-8')
-    rev_json=request_to_json(Request)
-    Client.sendall((HttpResponseHeader).encode(encoding='utf-8'))
-    Client.close()
-    return rev_json
-
-while True:
-    msg = rev_msg()
-    if msg['post_type'] == 'message':
-        print(f"收到来自群号{msg['group_id']}的消息{msg['message']}")
-        if msg['message'] in read_i.dic_key:
-            go.send(msg['group_id'], read_i.dic_key[msg['message']])
+    async def send(self, msg_type, send_id, msg):
+        """发送消息的函数"""
+        if msg_type == "private":
+            """私聊消息"""
+            data = self.data
+            data['action'] = "send_private_msg"
+            data['params']['user_id'] = int(send_id)
+            data['params']['message'] = msg
+            self.ws.send(json.dumps(data))
+        elif msg_type == "group":
+            """群聊消息"""
+            data = self.data
+            data['action'] = "send_group_msg"
+            data['params']['group_id'] = int(send_id)
+            data['params']['message'] = msg
+            self.ws.send(json.dumps(data))
